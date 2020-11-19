@@ -21,6 +21,7 @@ import lombok.Setter;
 @Entity
 @EqualsAndHashCode
 public class Org implements Serializable {
+	
 	@Getter @Setter
 	@EmbeddedId
 	public OrgId id;
@@ -34,7 +35,7 @@ public class Org implements Serializable {
 	
 	@JsonIgnore
     @MapsId("userId")
-    @JoinColumn(name="user_id", referencedColumnName="id")
+    @JoinColumn(name="user_id", referencedColumnName="email")
     @ManyToOne
     public User user;
 
@@ -45,7 +46,6 @@ public class Org implements Serializable {
 	}
 
 	public Org(OrgId id, String refreshToken, String accessToken, BigDecimal salesforceVersion) {
-		super();
 		this.id = id;
 		this.refreshToken = refreshToken;
 		this.accessToken = accessToken;

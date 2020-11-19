@@ -5,19 +5,23 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@ToString
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
+
+@Data
 @Embeddable
 public class RulesetId implements Serializable {
+	
 	@Column(name = "user_id")
-	private Long userId;
+	@JsonProperty(access=Access.WRITE_ONLY)
+	private String userId;
 	
 	@Column(name = "ruleset_name")
 	private String rulesetName;
