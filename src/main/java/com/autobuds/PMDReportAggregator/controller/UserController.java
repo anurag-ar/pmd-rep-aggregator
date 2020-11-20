@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,53 +18,52 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.autobuds.PMDReportAggregator.config.TokenConfig;
+import com.autobuds.PMDReportAggregator.exception.InvalidCredentialsException;
 import com.autobuds.PMDReportAggregator.model.User;
 import com.autobuds.PMDReportAggregator.service.CustomUserDetailsService;
 import com.autobuds.PMDReportAggregator.service.UserService;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/user")
+@RequestMapping("api/auth")
 public class UserController {
-	
+
 	@Autowired
 	private AuthenticationManager authenticationManager;
-	
+
 	@Autowired
 	private TokenConfig tokenConfig;
 
 	@Autowired
 	private CustomUserDetailsService userDetailsService;
-	
+
 	@Autowired
-	private UserService userService ;
-     
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody User user) throws Exception {
+	private UserService userService;
 
-		authenticate(user.getEmail(), user.getPassword());
+	@RequestMapping(value = "/signin", method = RequestMethod.POST)
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody User user) {
 
-		final UserDetails userDetails = userDetailsService
-				.loadUserByUsername(user.getEmail());
+		Map<String, Object> response = new HashMap<>();
+		try {
+			authenticate(user.getEmail(), user.getPassword());
 
-		
-		final String token = tokenConfig.generateToken(userDetails);
-	    Map<String, Object> response = new HashMap<>();
-	    response.put("user", userService.getUser(user.getEmail()));
-	    response.put("token", token);
-		return ResponseEntity.ok(response);
+			final UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+			final String token = tokenConfig.generateToken(userDetails);
+			response.put("user", userService.getUser(user.getEmail()));
+			response.put("token", token);
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			throw new InvalidCredentialsException("Invalid Username/Password. Try Again!!");
+		}
 	}
-	
-	@RequestMapping(value = "/signUp", method = RequestMethod.POST)
+
+	@RequestMapping(value = "/signup", method = RequestMethod.POST)
 	public ResponseEntity<?> createUser(@RequestBody User user) throws Exception {
 
 		User newUser = userService.saveUser(user);
 		return ResponseEntity.ok(newUser);
 	}
-	
-	
 
-	
 	private void authenticate(String username, String password) throws Exception {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));

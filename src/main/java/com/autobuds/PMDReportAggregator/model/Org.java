@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -25,9 +27,12 @@ public class Org implements Serializable {
 	@Getter @Setter
 	@EmbeddedId
 	public OrgId id;
+	
 	@Getter @Setter
+	@JsonProperty(access=Access.WRITE_ONLY)
 	private String refreshToken;
 	@Getter @Setter
+	@JsonProperty(access=Access.WRITE_ONLY)
 	private String accessToken;
 	@Getter @Setter
 	@Column(precision = 8, scale = 1)
