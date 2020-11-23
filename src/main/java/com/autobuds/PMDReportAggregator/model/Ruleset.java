@@ -25,7 +25,7 @@ public class Ruleset implements Serializable {
 	private RulesetId rulesetId;
 	
 	@JsonIgnore
-    @MapsId("userId")
+    @MapsId("email")
     @JoinColumn(name="user_id", referencedColumnName="email")
     @ManyToOne
     public User user;

@@ -29,8 +29,12 @@ public class Org implements Serializable {
 	public OrgId id;
 	
 	@Getter @Setter
+	private String orgName;
+	
+	@Getter @Setter
 	@JsonProperty(access=Access.WRITE_ONLY)
 	private String refreshToken;
+	
 	@Getter @Setter
 	@JsonProperty(access=Access.WRITE_ONLY)
 	private String accessToken;
@@ -39,22 +43,29 @@ public class Org implements Serializable {
 	private BigDecimal salesforceVersion;
 	
 	@JsonIgnore
-    @MapsId("userId")
+    @MapsId("email")
     @JoinColumn(name="user_id", referencedColumnName="email")
     @ManyToOne
     public User user;
 
 	@Override
 	public String toString() {
-		return "Org [id=" + id + ", refreshToken=" + refreshToken + ", accessToken=" + accessToken
-				+ ", salesforceVersion=" + salesforceVersion + "]";
+		return "Org [id=" + id + ", orgName=" + orgName + ", refreshToken=" + refreshToken + ", accessToken="
+				+ accessToken + ", salesforceVersion=" + salesforceVersion + "]";
 	}
 
-	public Org(OrgId id, String refreshToken, String accessToken, BigDecimal salesforceVersion) {
+	public Org(OrgId id, String orgName, String refreshToken, String accessToken, BigDecimal salesforceVersion) {
 		this.id = id;
+		this.orgName = orgName;
 		this.refreshToken = refreshToken;
 		this.accessToken = accessToken;
 		this.salesforceVersion = salesforceVersion;
 	}
+
+	
+
+	
+
+	
 
 }

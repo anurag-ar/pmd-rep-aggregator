@@ -23,9 +23,6 @@ public class OrgId implements Serializable {
 	@JsonProperty(access=Access.WRITE_ONLY)
 	private String userId;
 	
-	@Column(name = "org_name")
-	private String orgName;
-	
 	@Column(name = "org_id")
 	private String orgId;
 
