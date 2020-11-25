@@ -1,0 +1,78 @@
+package com.autobuds.PMDReportAggregator.service;
+
+import java.io.File;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.autobuds.PMDReportAggregator.utility.PmdRequest;
+
+import net.sourceforge.pmd.PMD;
+import net.sourceforge.pmd.PMDConfiguration;
+import net.sourceforge.pmd.RuleContext;
+import net.sourceforge.pmd.RuleSetFactory;
+import net.sourceforge.pmd.RulesetsFactoryUtils;
+import net.sourceforge.pmd.renderers.JsonRenderer;
+import net.sourceforge.pmd.util.ClasspathClassLoader;
+import net.sourceforge.pmd.util.datasource.DataSource;
+import net.sourceforge.pmd.util.datasource.FileDataSource;
+
+@Service
+public class PmdService {
+
+	private static PMDConfiguration configuration = new PMDConfiguration();
+
+	private static RuleContext ctx = new RuleContext();
+
+	private String base = "/unpackaged/classes/";
+
+	public String generateReport(String email, PmdRequest pmdRequest) {
+        
+		String report="";
+		try {
+		List<DataSource> files = new ArrayList<>();
+		StringBuilder sb = new StringBuilder();
+		String filepath = "./userData/" + email + "/" + pmdRequest.getOrgId() + base;
+		for (String fileName : pmdRequest.getApexClasses()) {
+			files.add(new FileDataSource(new File(filepath + fileName)));
+		}
+		for (String rule : pmdRequest.getRules()) {
+			sb.append("category/apex/").append(rule).append(",");
+		}
+		
+		String rule = "category/apex/documentation.xml,category/apex/bestpractices.xml,"
+				+ "category/apex/codestyle.xml,category/apex/design.xml," + "category/apex/errorprone.xml,"
+				+ "category/apex/security.xml,category/apex/performance.xml";
+		if(sb.length()>0) {
+		sb.setLength(sb.length() - 1);
+		configuration.setRuleSets(sb.toString());
+		RuleSetFactory ruleSetFactory = RulesetsFactoryUtils.createFactory(configuration);
+		report = runPmd(ruleSetFactory, files);
+		}
+		return report ;
+		} catch(Exception ex) {
+         throw new RuntimeException("Some Error in "+ex);
+		}
+	}
+
+	private String runPmd(RuleSetFactory ruleSetFactory, List<DataSource> files) throws Exception {
+
+		Writer rendererOutput = new StringWriter();
+		JsonRenderer renderer = new JsonRenderer();
+		try {
+			renderer.setWriter(rendererOutput);
+			renderer.start();
+		    PMD.processFiles(configuration, ruleSetFactory, files, ctx, Collections.singletonList(renderer));
+		    renderer.end();
+			renderer.flush();
+			return rendererOutput.toString();
+		} catch(Exception ex) {
+		   throw new RuntimeException(ex);
+		}
+	}
+
+}

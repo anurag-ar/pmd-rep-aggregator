@@ -1,5 +1,6 @@
 package com.autobuds.PMDReportAggregator.controller;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,10 +26,12 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.autobuds.PMDReportAggregator.config.TokenConfig;
 import com.autobuds.PMDReportAggregator.exception.InvalidCredentialsException;
 import com.autobuds.PMDReportAggregator.model.Org;
+import com.autobuds.PMDReportAggregator.model.OrgId;
 import com.autobuds.PMDReportAggregator.model.User;
 import com.autobuds.PMDReportAggregator.service.CustomUserDetailsService;
 import com.autobuds.PMDReportAggregator.service.SFOrgService;
 import com.autobuds.PMDReportAggregator.service.UserService;
+import com.autobuds.PMDReportAggregator.utility.ApexResponse;
 
 @RestController
 @CrossOrigin
@@ -98,5 +102,21 @@ public class UserController {
 		} catch (BadCredentialsException e) {
 			throw new Exception("INVALID_CREDENTIALS", e);
 		}
+	}
+	
+	@PostMapping("/retrieve")
+	public ResponseEntity<?> getapex(@RequestBody OrgId orgId) {
+		
+		try {
+			String email = "eshan";
+			orgId.setUserId(email);
+			List<String> list =  sfOrgService.retrieve(orgId);
+			 ApexResponse response = new ApexResponse();
+			 response.setApexClasses(list);
+	         return ResponseEntity.ok(response);
+		   } catch(Exception ex)
+		   {
+			throw new InvalidCredentialsException(ex.getMessage());		
+		   }
 	}
 }
