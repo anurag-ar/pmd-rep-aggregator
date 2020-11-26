@@ -12,6 +12,7 @@ public class Rule implements Serializable {
 
 	private String ruleName;
 	private String rulePath;
+	private String rulesetName;
 	private boolean isDeprecated;
 	private String priorityLabel;
 	private int priority;

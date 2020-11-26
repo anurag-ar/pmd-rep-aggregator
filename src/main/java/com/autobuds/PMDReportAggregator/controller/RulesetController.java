@@ -11,22 +11,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.autobuds.PMDReportAggregator.service.RulesetService;
 import com.autobuds.PMDReportAggregator.utility.Rule;
+import com.autobuds.PMDReportAggregator.utility.RuleListResponse;
 import com.autobuds.PMDReportAggregator.utility.RuleRequest;
 
 @RestController
 @CrossOrigin
-@RequestMapping("api")
+@RequestMapping("api/auth")
 public class RulesetController {
 	
 	@Autowired
 	private RulesetService rulesetService;
 	
 
-	@PostMapping(value = "rules", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public List<Rule> getRulesForRuleset( @RequestBody RuleRequest ruleRequest){//@RequestHeader("Authorization") String token,
+	@PostMapping(value = "/rules", consumes = MediaType.APPLICATION_JSON_VALUE)
+	public RuleListResponse getRulesForRuleset( @RequestBody RuleRequest ruleRequest){//@RequestHeader("Authorization") String token,
 //		System.out.println(ruleRequest);
 		List<Rule> ruleResponse = rulesetService.getRulesForRulesets(ruleRequest.getDefaultRulesets());
-		return ruleResponse;
+		RuleListResponse ruleListResponse = new RuleListResponse(ruleResponse);
+//		System.out.println(ruleListResponse);
+		return ruleListResponse;
 	}
 		
 }

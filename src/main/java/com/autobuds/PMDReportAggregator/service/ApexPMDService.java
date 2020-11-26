@@ -47,7 +47,7 @@ public class ApexPMDService {
 					Rule rul = is.next();
 					String rulePath = RulesetConstants.DEFAULT_RULESET_PATHS.get(rs.getName()) + "/" + rul.getName();//rul.getRuleSetName()
 					com.autobuds.PMDReportAggregator.utility.Rule customRule 
-					= new com.autobuds.PMDReportAggregator.utility.Rule(rul.getName(), rulePath, rul.isDeprecated(), rul.getPriority().toString(), rul.getPriority().getPriority());
+					= new com.autobuds.PMDReportAggregator.utility.Rule(rul.getName(), rulePath, rs.getName(), rul.isDeprecated(), rul.getPriority().toString(), rul.getPriority().getPriority());
 					li.add(customRule);
 				}
 				ruleMap.put(rs.getName(), li);
