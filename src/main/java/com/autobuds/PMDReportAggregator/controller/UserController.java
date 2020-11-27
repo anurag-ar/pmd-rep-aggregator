@@ -104,19 +104,5 @@ public class UserController {
 		}
 	}
 	
-	@PostMapping("/retrieve")
-	public ResponseEntity<?> getapex(@RequestBody OrgId orgId) {
-		
-		try {
-			String email = "eshan";
-			orgId.setUserId(email);
-			List<String> list =  sfOrgService.retrieve(orgId);
-			 ApexResponse response = new ApexResponse();
-			 response.setApexClasses(list);
-	         return ResponseEntity.ok(response);
-		   } catch(Exception ex)
-		   {
-			throw new InvalidCredentialsException(ex.getMessage());		
-		   }
-	}
+	
 }
