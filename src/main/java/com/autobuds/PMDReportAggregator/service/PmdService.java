@@ -43,10 +43,11 @@ public class PmdService {
 		for (String rule : pmdRequest.getRules()) {
 			sb.append("category/apex/").append(rule).append(",");
 		}
-		
-		String rule = "category/apex/documentation.xml,category/apex/bestpractices.xml,"
-				+ "category/apex/codestyle.xml,category/apex/design.xml," + "category/apex/errorprone.xml,"
-				+ "category/apex/security.xml,category/apex/performance.xml";
+			
+//		String rule = "category/apex/documentation.xml,category/apex/bestpractices.xml,"
+//				+ "category/apex/codestyle.xml,category/apex/design.xml," + "category/apex/errorprone.xml,"
+//				+ "category/apex/security.xml,category/apex/performance.xml,";
+//		sb.append(rule);
 		if(sb.length()>0) {
 		sb.setLength(sb.length() - 1);
 		configuration.setRuleSets(sb.toString());
