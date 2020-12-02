@@ -27,9 +27,11 @@ public class PmdController {
 	
 	@PostMapping("/report")
 	public ResponseEntity<?> generatePmdReport(@RequestHeader("Authorization") String token ,@RequestBody PmdRequest pmdRequest) throws Exception{
-		PmdReport pmdReport = new PmdReport();
+		
 		String email = tokenConfig.getUsernameFromToken(token.substring(7));
-		pmdReport.setReport(pmdService.generateReport(email, pmdRequest));
+		PmdReport pmdReport = pmdService.generateReport(email, pmdRequest) ;
+		//System.out.println(pmdReport.getReport());
+		//System.out.println(pmdReport.getApexCode());
 		return ResponseEntity.ok(pmdReport);
 	}
 

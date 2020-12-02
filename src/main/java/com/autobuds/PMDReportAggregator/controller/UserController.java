@@ -89,7 +89,7 @@ public class UserController {
            System.out.println(code +" "+ state);
 		RedirectView redirectView = new RedirectView();
 		 sfOrgService.saveOrg(code, state);
-		 redirectView.setUrl("http://localhost:4200/user profile?message=success");
+		 redirectView.setUrl("http://localhost:4200/org details?message=success");
 		 return redirectView ;
 	}
 	

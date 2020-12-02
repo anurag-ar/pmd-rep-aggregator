@@ -3,12 +3,19 @@ package com.autobuds.PMDReportAggregator.service;
 import java.io.File;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Service;
 
+import com.autobuds.PMDReportAggregator.utility.ApexCode;
+import com.autobuds.PMDReportAggregator.utility.PmdReport;
 import com.autobuds.PMDReportAggregator.utility.PmdRequest;
 
 import net.sourceforge.pmd.PMD;
@@ -30,15 +37,19 @@ public class PmdService {
 
 	private String base = "/unpackaged/classes/";
 
-	public String generateReport(String email, PmdRequest pmdRequest) {
+	public PmdReport generateReport(String email, PmdRequest pmdRequest) {
         
 		String report="";
+		PmdReport pmdReport = new PmdReport();
+		List<ApexCode> apexCode = new ArrayList<>();
 		try {
 		List<DataSource> files = new ArrayList<>();
 		StringBuilder sb = new StringBuilder();
 		String filepath = "./userData/" + email + "/" + pmdRequest.getOrgId() + base;
 		for (String fileName : pmdRequest.getApexClasses()) {
-			files.add(new FileDataSource(new File(filepath + fileName)));
+			File fl = new File(filepath + fileName) ;
+			apexCode.add(new ApexCode(fileName, Files.readAllLines(fl.toPath()) ));
+			files.add(new FileDataSource(fl));
 		}
 		for (String rule : pmdRequest.getRules()) {
 			sb.append("category/apex/").append(rule).append(",");
@@ -53,8 +64,10 @@ public class PmdService {
 		configuration.setRuleSets(sb.toString());
 		RuleSetFactory ruleSetFactory = RulesetsFactoryUtils.createFactory(configuration);
 		report = runPmd(ruleSetFactory, files);
+		pmdReport.setApexCode(apexCode);
+		pmdReport.setReport(report);
 		}
-		return report ;
+		return pmdReport;
 		} catch(Exception ex) {
          throw new RuntimeException("Some Error in "+ex);
 		}
