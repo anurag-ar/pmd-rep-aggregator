@@ -168,8 +168,11 @@ public class SFOrgService {
 	}
 
 	public List<Org> getOrgs(String email) {
-		
 		return orgRepo.findAllOrg(email);
+	}
+	
+	public Org getOrgById(OrgId orgId) {
+		return orgRepo.getOne(orgId);
 	}
 
 	private SFOrgResponse newAccessToken(String refreshToken) throws Exception {

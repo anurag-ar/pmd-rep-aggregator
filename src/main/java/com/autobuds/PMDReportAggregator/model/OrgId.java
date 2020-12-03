@@ -17,6 +17,8 @@ import lombok.ToString;
 
 @Data
 @Embeddable
+@AllArgsConstructor
+@NoArgsConstructor
 public class OrgId implements Serializable {
 	
 	@Column(name = "user_id")
