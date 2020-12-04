@@ -12,5 +12,7 @@ public class PmdRequest {
 	private List<String> rules ;
 	
 	private String orgId ;
+	
+	private List<String> mailList;
 
 }

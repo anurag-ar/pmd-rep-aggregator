@@ -53,7 +53,7 @@ public class PmdService {
 		}
 		if(pmdRequest.getRules()!=null && pmdRequest.getRules().size() > 0) {
 		for (String rule : pmdRequest.getRules()) {
-			sb.append("category/apex/").append(rule).append(",");
+			sb.append("category/apex/").append(rule.trim()).append(",");
 		}
 		}
 		else {
