@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 
@@ -24,6 +25,10 @@ public class Ruleset implements Serializable {
 	@EmbeddedId
 	private RulesetId rulesetId;
 	
+	@Lob
+	@Getter @Setter
+	private String rules;
+	
 	@JsonIgnore
     @MapsId("email")
     @JoinColumn(name="user_id", referencedColumnName="email")
@@ -32,12 +37,15 @@ public class Ruleset implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Ruleset [rulesetId=" + rulesetId + "]";
+		return "Ruleset [rulesetId=" + rulesetId + ", rules=" + rules + "]";
 	}
 
-	public Ruleset(RulesetId rulesetId) {
+	public Ruleset(RulesetId rulesetId, String rules) {
 		super();
 		this.rulesetId = rulesetId;
+		this.rules = rules;
 	}
+
+	
 	
 }

@@ -51,14 +51,18 @@ public class PmdService {
 			apexCode.add(new ApexCode(fileName, Files.readAllLines(fl.toPath()) ));
 			files.add(new FileDataSource(fl));
 		}
+		if(pmdRequest.getRules()!=null && pmdRequest.getRules().size() > 0) {
 		for (String rule : pmdRequest.getRules()) {
 			sb.append("category/apex/").append(rule).append(",");
 		}
-			
-//		String rule = "category/apex/documentation.xml,category/apex/bestpractices.xml,"
-//				+ "category/apex/codestyle.xml,category/apex/design.xml," + "category/apex/errorprone.xml,"
-//				+ "category/apex/security.xml,category/apex/performance.xml,";
-//		sb.append(rule);
+		}
+		else {
+			sb = new StringBuilder();
+		String rule = "category/apex/documentation.xml,category/apex/bestpractices.xml,"
+				+ "category/apex/codestyle.xml,category/apex/design.xml," + "category/apex/errorprone.xml,"
+				+ "category/apex/security.xml,category/apex/performance.xml,";
+		sb.append(rule);
+		}
 		if(sb.length()>0) {
 		sb.setLength(sb.length() - 1);
 		configuration.setRuleSets(sb.toString());
@@ -66,6 +70,7 @@ public class PmdService {
 		report = runPmd(ruleSetFactory, files);
 		pmdReport.setApexCode(apexCode);
 		pmdReport.setReport(report);
+		System.out.print(pmdReport);
 		}
 		return pmdReport;
 		} catch(Exception ex) {
